@@ -223,92 +223,102 @@
 {
 	padding: 7px;
 }
+
+#screen_form
+{	
+	background: none;
+	border: none;
+	outline:none;
+	color: black;
+	font:"Courier New", Courier, monospace;
+	text-align: right;
+	font-size: 65px;
+	position: relative;
+	left: 30px;
+	top: 15px;
+	width: 90%;
+	font-family:Digital-7;
+}
 	
 }
 
 </style>
 
 <script type="text/javascript">
-var decimal = false; 
-var decimalExists = false; 
 function concatToScreen(obj)
 {
-	var val = document.getElementById("text").innerHTML;
+	var val = document.getElementById("screen_form").value;
 	if (val.length < 13)
 	{
-		var end = (decimal && decimalExists ? "" : "."); 
-		var begin = (!decimal ? "" : "."); 
-		if (val == "0." || val == "OVERFLOW")
-		{
-			 document.getElementById("text").innerHTML = obj.innerHTML + end;
-			 decimal = false;
-		}
-		else if (obj.innerHTML != "x" && obj.innerHTML != ".")
-		{
-			document.getElementById("text").innerHTML = val.substr(0, val.length-1) + begin + obj.innerHTML + end;
-			decimal =  false;
-		}
-		else if (obj.innerHTML == ".")
-		{
-			document.getElementById("text").innerHTML =  val.substr(0, val.length-1) + ".";
-			decimal = true;
-			decimalExists = true;
-		}
+		if (val == "0" || val == "OVERFLOW")
+			 document.getElementById("screen_form").value = obj.innerHTML;
+		else if (obj.innerHTML == "x")
+			document.getElementById("screen_form").value = val.substr(0, val.length) + "*";
 		else
-		{
-			document.getElementById("text").innerHTML = begin + val.substr(0, val.length-1) + begin +"*" + end;
-			decimal =  false;
-		}
-		}
-		
-		else
-			document.getElementById("text").innerHTML = "OVERFLOW";
+			document.getElementById("screen_form").value = val.substr(0, val.length) + obj.innerHTML;
+	}	
+	else
+		document.getElementById("screen_form").value = "OVERFLOW";
 }
 
 function clearScreen()
 {
-	document.getElementById("text").innerHTML = "0.";
-}
-
-function phpEval()
-{
-	
+	document.getElementById("screen_form").value = "0";
 }
 
 </script>
 
+
 <div id="calculator_container">
 <div id="calculatorScreen"> 
-<p id="text">0.</p>
+<form method="GET" action="<?php echo htmlspecialchars($_SERVER["PHP_SELF"])?>">
+<input name="calc" onfocus="this.value=''" onblur="if (this.value == ''){this.value='0';}"id="screen_form" value="<?php
+
+//HANDLE HERE
+if (isset($_GET['calc']))
+{
+	$string = $_GET['calc'];
+	$pattern;
+	$result = 1;//preg_match($pattern, $string); 
+	
+	if ($result)
+		 echo eval("return " . $string. ";");
+	else
+		echo "Invalid syntax";
+	
+}
+else
+	echo "0";
+?>" type="text" />
 </div>
 <table id="buttons">
 <tr>
-<td><button class="calcButtonOperator" onclick="concatToScreen(this)">(</button></td>
-<td><button class="calcButtonOperator" onclick="concatToScreen(this)">)</button></td>
-<td><button class="calcButtonOperator" onclick="concatToScreen(this)">%</button></td>
-<td><button class="calcButtonOperator" onclick="clearScreen()">AC</button></td>
+<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">(</button></td>
+<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">)</button></td>
+<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">%</button></td>
+<td><button type="button" class="calcButtonOperator" onclick="clearScreen()">AC</button></td>
 </tr>
 <tr>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">7</button></td>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">8</button></td>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">9</button></td>
-<td><button class="calcButtonOperator" onclick="concatToScreen(this)">/</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">7</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">8</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">9</button></td>
+<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">/</button></td>
 </tr>
 <tr>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">4</button></td>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">5</button></td>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">6</button></td>
-<td><button class="calcButtonOperator" onclick="concatToScreen(this)">x</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">4</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">5</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">6</button></td>
+<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">x</button></td>
 <tr>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">1</button></td>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">2</button></td>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">3</button></td>
-<td><button class="calcButtonOperator" onclick="concatToScreen(this)">-</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">1</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">2</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">3</button></td>
+<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">-</button></td>
 <tr>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">0</button></td>
-<td><button class="calcButtonNum" onclick="concatToScreen(this)">.</button></td>
-<td><button class="calcButtonEq" onclick="phpEval()">=</button></td>
-<td><button class="calcButtonOperator" onclick="concatToScreen(this)">+</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">0</button></td>
+<td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">.</button></td>
+<td><input type="submit" value="=" class="calcButtonEq" />
+<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">+</button></td>
 </tr>
 </tr>
 </tr>
@@ -316,9 +326,8 @@ function phpEval()
 
 
 </table>
+</form>
 </div>
-
-
 
 
 </body>
