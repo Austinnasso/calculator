@@ -287,11 +287,19 @@ function del()
 if (isset($_GET['calc']))
 {
 	$string = $_GET['calc'];
+	$haystackEnd;
+	$haystackBegin; 
+	while ($haystackEnd = strstr($string, "--")) 
+	{
+		$haystackBegin = strstr($string, "--", true);
+		$string = substr($haystackBegin, 0, strlen($haystackBegin)) . "- " . substr($haystackEnd, 1, strlen($haystackEnd));
+	}
+	
 	if(preg_match('/\/0/',$string,$matches))
 	{
 		echo "DIV BY ZERO";
 	}
-	else if(!preg_match("/^((-?[1-9]\d*(\.\d+)?)|(-?0(\.\d+)?))([\+\-\/\*]((-?[1-9]\d*(\.\d+)?)|(-?0(\.\d+)?)))*$/",$string,$matches))
+	else if(!preg_match("/^(\s*(-?[1-9]\d*(\.\d+)?)|(-?0(\.\d+)?))\s*([\+\-\/\*]\s*((-?[1-9]\d*(\.\d+)?)|(-?0(\.\d+)?))\s*)*$/",$string,$matches))
 	{
 		echo "Invalid Syntax";
 	}
