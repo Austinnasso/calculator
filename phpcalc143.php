@@ -210,7 +210,7 @@
 
 
 
-#buttons
+.buttons
 {
 	display: block;
 	margin: auto;
@@ -219,7 +219,7 @@
 	width: 390px;
 }
 
-#buttons td
+.buttons td
 {
 	padding: 7px;
 }
@@ -266,6 +266,15 @@ function clearScreen()
 	document.getElementById("screen_form").value = "0";
 }
 
+function del()
+{
+	var str = document.getElementById("screen_form").value; 
+	if (str != "0")
+		document.getElementById("screen_form").value = str.substr(0, str.length - 1);
+		
+	
+}
+
 </script>
 
 
@@ -278,26 +287,29 @@ function clearScreen()
 if (isset($_GET['calc']))
 {
 	$string = $_GET['calc'];
-	$pattern;
-	$result = 1;//preg_match($pattern, $string); 
-	
-	if ($result)
-		 echo eval("return " . $string. ";");
+	if(preg_match('/\/0/',$string,$matches))
+	{
+		echo "DIV BY ZERO";
+	}
+	else if(!preg_match("/^((-?[1-9]\d*(\.\d+)?)|(-?0(\.\d+)?))([\+\-\/\*]((-?[1-9]\d*(\.\d+)?)|(-?0(\.\d+)?)))*$/",$string,$matches))
+	{
+		echo "Invalid Syntax";
+	}
 	else
-		echo "Invalid syntax";
+		echo eval("return " . $string. ";");
 	
 }
 else
 	echo "0";
 ?>" type="text" />
 </div>
-<table id="buttons">
+<table class="buttons" style="position: relative; top: 55px; left: 0px;">
 <tr>
-<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">(</button></td>
-<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">)</button></td>
-<td><button type="button" class="calcButtonOperator" onclick="concatToScreen(this)">%</button></td>
-<td><button type="button" class="calcButtonOperator" onclick="clearScreen()">AC</button></td>
+<td><button type="button" class="calcButtonOperator" style="width: 175px;" onclick="del()">DEL</button></td>
+<td><button type="button" class="calcButtonOperator" style="width: 175px;" onclick="clearScreen()">AC</button></td>
 </tr>
+</table>
+<table class="buttons">
 <tr>
 <td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">7</button></td>
 <td><button type="button" class="calcButtonNum" onclick="concatToScreen(this)">8</button></td>
